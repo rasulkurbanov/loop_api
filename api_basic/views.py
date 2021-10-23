@@ -10,10 +10,56 @@ from django.utils.decorators import method_decorator
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import mixins
+from rest_framework import generics
 
 
 
 # Create your views here.
+#Add generics, mixins based Class Api Views
+class GenericListView(generics.GenericAPIView,
+                    mixins.ListModelMixin, 
+                    mixins.CreateModelMixin,
+                    mixins.DestroyModelMixin, 
+                    mixins.UpdateModelMixin,
+                    mixins.RetrieveModelMixin):
+
+    serializer_class = ArticleSerializer
+    queryset = Article.objects.all()       
+
+    def get(self, request, pk=None):
+        if pk:
+            return self.retrieve(request)
+        else:
+            return self.list(request)
+    
+
+
+    def post(self, request):
+        return self.create(request)
+
+    def put(self, request, pk=None):
+        return self.update(request)
+
+
+    def delete(self, request, pk=None):
+        return self.destroy(request)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class ArticleListView(APIView):
 
     def get(self, request):
